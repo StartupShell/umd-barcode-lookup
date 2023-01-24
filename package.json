@@ -1,0 +1,22 @@
+{
+    "name": "umd-barcode-lookup",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "rm -rf build && mkdir build && cp package.json package-lock.json .env.yaml build && tsc",
+        "deploy": "gcloud functions deploy umd-barcode-lookup --gen2 --runtime=nodejs18 --region=us-east4 --source=build --entry-point=main --trigger-http --allow-unauthenticated --env-vars-file .env.yaml --set-secrets LDAP_PASSWORD=ldap-password:1",
+        "setsecret:LDAP_PASSWORD": "f() { gcloud secrets create ldap-password --replication-policy=automatic --data-file - <<< \"$1\"; }; f"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@google-cloud/functions-framework": "^3.1.3",
+        "ldapjs-promise": "^2.0.1"
+    },
+    "devDependencies": {
+        "typescript": "^4.9.4"
+    }
+}
