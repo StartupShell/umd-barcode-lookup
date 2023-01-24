@@ -2,6 +2,8 @@ import { HttpFunction } from "@google-cloud/functions-framework"
 import ldap from "ldapjs-promise"
 
 export const main: HttpFunction = async (req, res) => {
+    res.set("Access-Control-Allow-Origin", "*")
+
     try {
         if (!("barcode" in req.query)) {
             console.log("barcode not provided in query")
