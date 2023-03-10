@@ -5,10 +5,10 @@ export const main: HttpFunction = async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*")
 
     try {
-        if (!("barcode" in req.query || "uid" in req.query) || ("barcode" in req.query && "uid" in req.query)) {
-            console.log("barcode not provided in query")
+        if (!("barcode" in req.query || "uid" in req.query)) {
+            console.log("neither barcode nor uid provided")
             res.status(400)
-            res.json({ error: "barcode value not provided" })
+            res.json({ error: "neither barcode nor uid provided" })
             return
         }
 
@@ -18,15 +18,18 @@ export const main: HttpFunction = async (req, res) => {
         
         console.log("client binded")
 
-        const results = "barcode" in req.query ? 
-            (await client.searchReturnAll("ou=people,dc=umd,dc=edu", {
-                filter: `(&(objectClass=*)(umLibraryBarcode=${req.query["barcode"]}))`,
-                scope: "sub",
-            })) :
-            (await client.searchReturnAll("ou=people,dc=umd,dc=edu", {
-                filter: `(&(objectClass=*)(employeeNumber=${req.query["uid"]}))`,
-                scope: "sub",
-            }))
+        let search = "";
+        
+        if("barcode" in req.query) { 
+            search = "umLibraryBarcode" 
+        } else {
+            search = "employeeNumber"
+        }
+
+        let results = await client.searchReturnAll("ou=people,dc=umd,dc=edu", {
+            filter: `(&(objectClass=*)(${search}=${req.query["barcode"]}))`,
+            scope: "sub",
+        })
         
         console.log("barcode lookup results: ", results)
         return res.json({ results })
