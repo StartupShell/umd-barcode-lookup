@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "rm -rf build && mkdir build && cp package.json package-lock.json .env.yaml build && tsc",
         "deploy": "gcloud functions deploy umd-barcode-lookup --gen2 --runtime=nodejs18 --region=us-east4 --source=build --entry-point=main --trigger-http --allow-unauthenticated --env-vars-file .env.yaml --set-secrets LDAP_PASSWORD=ldap-password:1",
-        "setsecret:LDAP_PASSWORD": "f() { gcloud secrets create ldap-password --replication-policy=automatic --data-file - <<< \"$1\"; }; f"
+        "setsecret:LDAP_PASSWORD": "f() { gcloud secrets create ldap-password --replication-policy=automatic --data-file - << \"$1\"; }; f"
     },
     "keywords": [],
     "author": "",
