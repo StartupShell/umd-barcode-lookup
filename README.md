@@ -18,7 +18,7 @@ Before you start, ensure you have the `gcloud` CLI installed.
 1. Clone the repo
 2. Set up `.env.yaml` with your LDAP DN for access
 3. Set your LDAP password by running `npm run setsecret:LDAP_PASSWORD -- <password>`
-4. Build the function: `npm run build`
+4. Build the function: `npm run predeploy`
 5. Deploy the function: `npm run deploy`
 
 The URL to the function will be in the output of the deploy command.
