@@ -15,22 +15,24 @@ export const main: HttpFunction = async (req, res) => {
         const client = ldap.createClient({ url: process.env.LDAP_URL as string })
         const password = process.env.LDAP_PASSWORD!.replaceAll("\n", "")
         await client.bind(process.env.LDAP_DN as string, password)
-        
+
         console.log("client binded")
 
-        let search = "";
-        
-        if("barcode" in req.query) { 
-            search = "umLibraryBarcode" 
+        let searchKey
+        let searchValue
+        if ("barcode" in req.query) {
+            searchKey = "umLibraryBarcode"
+            searchValue = req.query["barcode"]
         } else {
-            search = "employeeNumber"
+            searchKey = "employeeNumber"
+            searchValue = req.query["uid"]
         }
 
         let results = await client.searchReturnAll("ou=people,dc=umd,dc=edu", {
-            filter: `(&(objectClass=*)(${search}=${req.query["barcode"]}))`,
+            filter: `(&(objectClass=*)(${searchKey}=${searchValue}))`,
             scope: "sub",
         })
-        
+
         console.log("barcode lookup results: ", results)
         return res.json({ results })
     } catch (error) {
